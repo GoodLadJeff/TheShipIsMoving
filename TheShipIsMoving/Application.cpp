@@ -3,6 +3,7 @@
 #include "Actor.h"
 #include "PhysicsManager.h"
 #include "RenderManager.h"
+#include "rlgl.h"
 
 //------------------------------------------------------------------------------------
 // Program main entry point
@@ -37,13 +38,14 @@ int main(void)
 
     RenderManager rend_man = RenderManager();
 
-    Mesh mesh = GenMeshCube(1, 1, 1);
+    Mesh mesh = GenMeshCube(2, 2, 2);
     Model model = LoadModelFromMesh(mesh);
-    Texture2D texture = LoadTexture("./ressources/models/objDefaultMaterial_BaseColor");
+    Image image = LoadImage("D:/PersonalProjects/TheShipIsMoving/ressources/Wood_Crate_001_basecolor.png");
+    Texture2D texture = LoadTexture("D:/PersonalProjects/TheShipIsMoving/ressources/Wood_Crate_001_basecolor.png");
     model.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;
     Vector3 position = { 0.0f, 0.0f, 0.0f };
     BoundingBox bounds = GetMeshBoundingBox(model.meshes[0]);
-
+    float x = 0.0f;
     // Main game loop
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {
@@ -90,9 +92,16 @@ int main(void)
         ClearBackground(RAYWHITE);
         BeginMode3D(camera);
 
-        DrawModel(model, position, 1.0f, WHITE);
+        x += 0.5f;
         DrawGrid(10, 2);
         rend_man.Render();
+
+        rlPushMatrix();
+        rlTranslatef(0, 3, 0);
+        rlRotatef(30, 0, 0, 1);
+        rlRotatef(30, 0, 1, 0);
+        DrawModel(model, position, 1.0f, WHITE);
+        rlPopMatrix();
 
         EndMode3D();
         EndDrawing();

@@ -7,6 +7,7 @@ public:
 	Vector3 position;
 	Vector3 velocity;
 	Vector3 acceleration;
+	Vector3 rotation;
 
 	float mass;
 

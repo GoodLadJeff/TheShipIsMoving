@@ -20,6 +20,8 @@ void PhysicsManager::Compute(float dt)
 		actor->position = Vector3Add(actor->position, Vector3Multiply(actor->velocity, { dt, dt, dt }));
 
 		actor->acceleration = { 0,0,0 };
+
+		actor->rotation = Vector3Add(actor->rotation, { 1,1,1 });
 	}
 
 	for (size_t i = 0; i < actors.size(); ++i)
@@ -35,8 +37,46 @@ void PhysicsManager::Compute(float dt)
 				Vector3 AtoB = Vector3Subtract(B->position, A->position);
 				Vector3 BtoA = Vector3Subtract(A->position, B->position);
 
-				A->SetVelocity(BtoA);
-				B->SetVelocity(AtoB);
+				// Claculate distance
+
+				/*float ySqr = (B->position.y - A->position.y) * (B->position.y - A->position.y);
+				float zSqr = (B->position.z - A->position.z) * (B->position.z - A->position.z);
+				float xSqr = (B->position.x - A->position.x) * (B->position.x - A->position.x);
+
+				float mySqr = xSqr + ySqr + zSqr;
+
+				float myDistance = sqrt(mySqr);*/
+
+				float x = A->velocity.x * A->velocity.x;
+				float y = A->velocity.y * A->velocity.y;
+				float z = A->velocity.z * A->velocity.z;
+
+				float myRealSqrt = x + y + z;
+				float A_Speed = sqrt(myRealSqrt);
+
+				x = B->velocity.x * B->velocity.x;
+				y = B->velocity.y * B->velocity.y;
+				z = B->velocity.z * B->velocity.z;
+				myRealSqrt = x + y + z;
+				float B_Speed = sqrt(myRealSqrt);
+
+				float vf = 10;
+				Vector3 v = { vf,vf,vf };
+				Vector3 zero = { 0,0,0 };
+
+				//using the speed and the mass to calculate physics
+
+				float BandASpeed = A_Speed + B_Speed;
+
+				A->AddForce(Vector3Multiply(Vector3Multiply(BtoA, { B->mass * BandASpeed,B->mass * BandASpeed,B->mass * BandASpeed }), v));
+				B->AddForce(Vector3Multiply(Vector3Multiply(AtoB, { A->mass * BandASpeed,A->mass * BandASpeed,A->mass * BandASpeed }), v));
+
+				/*A->AddForce(Vector3Multiply(Vector3Multiply(BtoA, { B->mass * B_Speed,B->mass * B_Speed,B->mass * B_Speed }), v));
+				B->AddForce(Vector3Multiply(Vector3Multiply(AtoB, { A->mass * A_Speed,A->mass * A_Speed,A->mass * A_Speed }), v));*/
+
+				A->velocity = zero;
+				B->velocity = zero;
+				
 			}
 		}
 	}
