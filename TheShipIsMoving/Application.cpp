@@ -4,6 +4,8 @@
 #include "PhysicsManager.h"
 #include "RenderManager.h"
 #include "rlgl.h"
+#include "raymath.h"
+#include "Player.h"
 
 //------------------------------------------------------------------------------------
 // Program main entry point
@@ -25,12 +27,16 @@ int main(void)
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
 
-    Camera3D camera = Camera3D();
-    camera.position = { -20.0f, 8.0f, 0.0f };    // Camera position
-    camera.target = { 0.0f, 2.0f, 0.0f };
-    camera.up = { 0.0f, 1.0f, 0.0f };          // Camera up vector (rotation towards target)
-    camera.fovy = 60.0f;                                // Camera field-of-view Y
-    camera.projection = CAMERA_PERSPECTIVE;
+    Player player = Player();
+    
+    // Disable cursor for FPS-style camera
+    DisableCursor();
+
+    // Variables for movement
+    float speed = 5.0f;  // Movement speed
+    float mouseSensitivity = 0.01f;
+    Vector2 mouseDelta = {0.0f, 0.0f}; // To store mouse movement
+    Vector2 mousePosition = GetMousePosition(); // Starting mouse position
 
     PhysicsManager phys_man = PhysicsManager();
 
@@ -55,9 +61,9 @@ int main(void)
         // TODO: Update your variables here
         //----------------------------------------------------------------------------------
         phys_man.Compute(dt);
+
         // LE CANON
         counter += dt;
-
         if (counter >= 1)
         {
             counter = 0;
@@ -86,11 +92,13 @@ int main(void)
             rend_man.AddActor(another_object);
         }
 
+        player.UpdatePlayer(dt);
+
         // Draw
         //----------------------------------------------------------------------------------
         BeginDrawing();
         ClearBackground(RAYWHITE);
-        BeginMode3D(camera);
+        BeginMode3D(*player.GetCamera());
 
         x += 0.5f;
         DrawGrid(10, 2);

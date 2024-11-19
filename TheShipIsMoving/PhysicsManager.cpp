@@ -53,14 +53,16 @@ void PhysicsManager::Compute(float dt)
 
 				float myRealSqrt = x + y + z;
 				float A_Speed = sqrt(myRealSqrt);
+				Vector3 A_SpeedVector = { A_Speed ,A_Speed ,A_Speed };
 
 				x = B->velocity.x * B->velocity.x;
 				y = B->velocity.y * B->velocity.y;
 				z = B->velocity.z * B->velocity.z;
 				myRealSqrt = x + y + z;
 				float B_Speed = sqrt(myRealSqrt);
+				Vector3 B_SpeedVector = { B_Speed ,B_Speed ,B_Speed };
 
-				float vf = 25;
+				float vf = 17;
 				Vector3 v = { vf,vf,vf };
 				Vector3 zero = { 0,0,0 };
 
@@ -74,11 +76,8 @@ void PhysicsManager::Compute(float dt)
 				//A->AddForce(Vector3Multiply(Vector3Multiply(BtoA, B_Inertia), v));
 				//B->AddForce(Vector3Multiply(Vector3Multiply(AtoB, A_Inertia), v));
 
-				A->AddForce(Vector3Multiply(BtoA, v));
-				B->AddForce(Vector3Multiply(AtoB, v));
-
-				A->AddForce(Vector3Multiply(B->velocity, v));
-				B->AddForce(Vector3Multiply(A->velocity, v));
+				A->AddForce(Vector3Multiply(Vector3Add(Vector3Multiply(BtoA, A_SpeedVector), B_Inertia), v));
+				B->AddForce(Vector3Multiply(Vector3Add(Vector3Multiply(AtoB, B_SpeedVector), A_Inertia), v));
 
 				/*A->AddForce(Vector3Multiply(Vector3Multiply(BtoA, { B->mass * B_Speed,B->mass * B_Speed,B->mass * B_Speed }), v));
 				B->AddForce(Vector3Multiply(Vector3Multiply(AtoB, { A->mass * A_Speed,A->mass * A_Speed,A->mass * A_Speed }), v));*/
