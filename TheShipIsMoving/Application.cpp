@@ -28,7 +28,15 @@ int main(void)
     //--------------------------------------------------------------------------------------
 
     Player player = Player();
-    
+    player.position = { 0,2,0 };
+    Camera main_camera = Camera3D();
+
+    main_camera.position = player.position.GetRayVec();
+    main_camera.target.x -= 5.0f;
+    main_camera.up = { 0,1,0 };
+    main_camera.fovy = 90.0f;
+    main_camera.projection = CAMERA_PERSPECTIVE;
+
     // Disable cursor for FPS-style camera
     DisableCursor();
 
@@ -68,21 +76,21 @@ int main(void)
         {
             counter = 0;
 
-            float velocity_to_add = 10.0f;
+            float velocity_to_add = 20.0f;
 
             const auto just_an_object = new Actor();
-            just_an_object->position = { 0, 0, 0 };
+            just_an_object->position = { 0, 5, -10 };
             just_an_object->SetVelocity({
-                (float)GetRandomValue(0, 10) / 10.0f,
-                velocity_to_add,
+                (float)GetRandomValue(0, velocity_to_add) / 10.0f,
+                velocity_to_add/1.5f,
                 velocity_to_add });
 
             
             const auto another_object = new Actor();
-            another_object->position = { 0, 0, 10 };
+            another_object->position = { 0, 5, 10 };
             another_object->SetVelocity({
-               (float)GetRandomValue(0, 10) / 10.0f,
-                velocity_to_add,
+               (float)GetRandomValue(0, velocity_to_add) / 10.0f,
+                velocity_to_add/1.5f,
                 -velocity_to_add });
 
             phys_man.AddActor(just_an_object);
@@ -92,13 +100,15 @@ int main(void)
             rend_man.AddActor(another_object);
         }
 
-        player.UpdatePlayer(dt);
+        player.target = { main_camera.target.x, main_camera.target.y, main_camera.target.z };
+        player.Move(dt);
+        main_camera.position = player.position.GetRayVec();
 
         // Draw
         //----------------------------------------------------------------------------------
         BeginDrawing();
         ClearBackground(RAYWHITE);
-        BeginMode3D(*player.GetCamera());
+        BeginMode3D(main_camera);
 
         x += 0.5f;
         DrawGrid(10, 2);

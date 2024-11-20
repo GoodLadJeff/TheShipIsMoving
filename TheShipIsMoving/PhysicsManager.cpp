@@ -1,5 +1,6 @@
 #include "PhysicsManager.h"
 #include "raymath.h"
+#include "Vec3.h"
 
 PhysicsManager::PhysicsManager()
 {
@@ -15,13 +16,13 @@ void PhysicsManager::Compute(float dt)
 {
 	for (Actor* actor : actors)
 	{
-		actor->acceleration = Vector3Add(actor->acceleration, Vector3Multiply({ actor->mass,actor->mass,actor->mass }, gravity));
-		actor->velocity = Vector3Add(actor->velocity, Vector3Multiply(Vector3Divide(actor->acceleration, { actor->mass, actor->mass, actor->mass }), { dt,dt,dt }));
-		actor->position = Vector3Add(actor->position, Vector3Multiply(actor->velocity, { dt, dt, dt }));
+		actor->acceleration += actor->mass * gravity;
+		actor->velocity += (actor->acceleration / actor->mass) * dt;
+		actor->position += actor->velocity * dt;
 
 		actor->acceleration = { 0,0,0 };
 
-		actor->rotation = Vector3Add(actor->rotation, { 1,1,1 });
+		actor->rotation += { 1,1,1 };
 	}
 
 	for (size_t i = 0; i < actors.size(); ++i)
@@ -32,20 +33,10 @@ void PhysicsManager::Compute(float dt)
 		{  
 			Actor* B = actors[j];
 
-			if (CheckCollisionSpheres(A->position, 1, B->position, 1))
+			if (CheckCollisionSpheres(A->position.GetRayVec(), 1, B->position.GetRayVec(), 1))
 			{
-				Vector3 AtoB = Vector3Subtract(B->position, A->position);
-				Vector3 BtoA = Vector3Subtract(A->position, B->position);
-
-				// Claculate distance
-
-				/*float ySqr = (B->position.y - A->position.y) * (B->position.y - A->position.y);
-				float zSqr = (B->position.z - A->position.z) * (B->position.z - A->position.z);
-				float xSqr = (B->position.x - A->position.x) * (B->position.x - A->position.x);
-
-				float mySqr = xSqr + ySqr + zSqr;
-
-				float myDistance = sqrt(mySqr);*/
+				Vec3 AtoB = B->position - A->position;
+				Vec3 BtoA = A->position - B->position;
 
 				float x = A->velocity.x * A->velocity.x;
 				float y = A->velocity.y * A->velocity.y;
@@ -53,38 +44,43 @@ void PhysicsManager::Compute(float dt)
 
 				float myRealSqrt = x + y + z;
 				float A_Speed = sqrt(myRealSqrt);
-				Vector3 A_SpeedVector = { A_Speed ,A_Speed ,A_Speed };
 
 				x = B->velocity.x * B->velocity.x;
 				y = B->velocity.y * B->velocity.y;
 				z = B->velocity.z * B->velocity.z;
 				myRealSqrt = x + y + z;
 				float B_Speed = sqrt(myRealSqrt);
-				Vector3 B_SpeedVector = { B_Speed ,B_Speed ,B_Speed };
 
-				float vf = 17;
-				Vector3 v = { vf,vf,vf };
-				Vector3 zero = { 0,0,0 };
+				float vf = 3.f;
+				Vec3 zero = { 0,0,0 };
 
 				//using the speed and the mass to calculate physics
 
 				float BandASpeed = A_Speed + B_Speed;
 
-				Vector3 A_Inertia = Vector3Multiply(A->velocity, { A->mass, A->mass, A->mass });
-				Vector3 B_Inertia = Vector3Multiply(B->velocity, { B->mass, B->mass, B->mass });
+				Vec3 A_Inertia = A->velocity * A->mass;
+				Vec3 B_Inertia = B->velocity * B->mass;
+				  
+				Vec3 A_ForceApplied = (BtoA * A_Speed) + B_Inertia;
+				Vec3 B_ForceApplied = (AtoB * B_Speed) + A_Inertia;
 
 				//A->AddForce(Vector3Multiply(Vector3Multiply(BtoA, B_Inertia), v));
 				//B->AddForce(Vector3Multiply(Vector3Multiply(AtoB, A_Inertia), v));
 
-				A->AddForce(Vector3Multiply(Vector3Add(Vector3Multiply(BtoA, A_SpeedVector), B_Inertia), v));
-				B->AddForce(Vector3Multiply(Vector3Add(Vector3Multiply(AtoB, B_SpeedVector), A_Inertia), v));
+				A->SetVelocity(A_ForceApplied / vf);
+				B->SetVelocity(B_ForceApplied / vf);
+
+				/*A->AddForce(Vector3Multiply(Vector3Add(Vector3Multiply(BtoA, A_SpeedVector), B_Inertia), v));
+				B->AddForce(Vector3Multiply(Vector3Add(Vector3Multiply(AtoB, B_SpeedVector), A_Inertia), v));*/
+
+
 
 				/*A->AddForce(Vector3Multiply(Vector3Multiply(BtoA, { B->mass * B_Speed,B->mass * B_Speed,B->mass * B_Speed }), v));
 				B->AddForce(Vector3Multiply(Vector3Multiply(AtoB, { A->mass * A_Speed,A->mass * A_Speed,A->mass * A_Speed }), v));*/
 
-				A->velocity = zero;
+				/*A->velocity = zero;
 				B->velocity = zero;
-				
+				*/
 			}
 		}
 	}

@@ -2,33 +2,35 @@
 #include "raymath.h"
 #include <iostream>
 
-Player::Player()
+Player::Player() : Actor()
 {
-    camera = { 0 };
-    camera.position = { 0.0f, 2.0f, 20.0f }; 
-    camera.target = camera.position;
-    camera.target.z -= 5.0f;
-    camera.up = { 0.0f, 1.0f, 0.0f };    
-    camera.fovy = 45.0f;         
-    camera.projection = CAMERA_PERSPECTIVE;
+    
 }
 
-void Player::UpdatePlayer(float dt)
+void Player::Move(float dt)
 {
-    Vector3 towards_target = Vector3Subtract(camera.target, camera.position);
-    towards_target.y = 0;
-    towards_target = Vector3Normalize(towards_target);
+    Vec3 direction = {};
 
-    //std::cout << camera.position.x << std::endl;
+    Vec3 forward = target - position;
+    Vec3 right = forward.cross(up);
 
     if (IsKeyDown(KEY_W))
     {
-       camera.position = Vector3Add(camera.position, Vector3Multiply(towards_target, { speed * dt, speed * dt, speed * dt }));
-       camera.target = Vector3Add(camera.target, Vector3Multiply(towards_target, { speed * dt, speed * dt, speed * dt }));
+        direction += forward.normalized();
     }
     if (IsKeyDown(KEY_S))
     {
-       camera.position = Vector3Subtract(camera.position, Vector3Multiply(towards_target, { speed * dt, speed * dt, speed * dt }));
-       camera.target = Vector3Subtract(camera.target, Vector3Multiply(towards_target, { speed * dt, speed * dt, speed * dt }));
+        direction -= forward.normalized();
     }
+    if (IsKeyDown(KEY_D))
+    {
+        direction += right.normalized();
+    }
+    if (IsKeyDown(KEY_A))
+    {
+        direction -= right.normalized();
+    }
+
+    direction = direction.normalized();
+    position += direction * walking_speed * dt;
 }

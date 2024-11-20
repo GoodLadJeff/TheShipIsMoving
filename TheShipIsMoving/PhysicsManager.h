@@ -6,7 +6,7 @@ class PhysicsManager
 {
 private:
 	std::vector<Actor*> actors;
-	Vector3 gravity = { 0.0f, -9.81f, 0.0f };
+	Vec3 gravity = { 0.0f, -9.81f, 0.0f };
 
 public:
 

@@ -24,12 +24,12 @@ void Actor::DrawSelf()
 	rlPopMatrix();
 }
 
-void Actor::SetVelocity(Vector3 in_velocity)
+void Actor::SetVelocity(Vec3 in_velocity)
 {
 	velocity = in_velocity;
 }
 
-void Actor::AddForce(Vector3 in_force)
+void Actor::AddForce(Vec3 in_force)
 {
-	acceleration = Vector3Add(acceleration, in_force);
+	acceleration += in_force;
 }
