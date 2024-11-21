@@ -5,7 +5,7 @@
 #include "PhysicsManager.h"
 #include "RenderManager.h"
 
-Actor::Actor(bool in_simulate_physics)
+Actor::Actor(Game* game, bool in_simulate_physics)
 {
 	position = { 0,0,0 };
 	velocity = { 0,0,0 };
@@ -17,11 +17,11 @@ Actor::Actor(bool in_simulate_physics)
 	simulate_physics = in_simulate_physics;
 	render = true;
 
-	_ASSERT(World::game);
-	_ASSERT(World::game->GetPhysicsManager() == nullptr);
-
-	 /*World::game->GetPhysicsManager()->AddActor(this);*/
-	//if (render) ManagersRef::game->GetRenderManager()->AddActor(this);
+	_ASSERT(game);
+	_ASSERT(game->GetPhysicsManager());
+	
+	if (simulate_physics) game->GetPhysicsManager()->AddActor(this);
+	if (render) game->GetRenderManager()->AddActor(this);
 }
 
 void Actor::DrawSelf()

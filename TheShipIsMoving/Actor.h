@@ -1,6 +1,7 @@
 #pragma once
 #include "raylib.h"
 #include "Vec3.h"
+#include "Game.h"
 
 class Actor
 {
@@ -16,7 +17,8 @@ public:
 	bool render;
 
 public:
-	Actor(bool in_simulate_physics = true);
+	Actor() = delete;
+	Actor(Game* game, bool in_simulate_physics = true);
 
 	void DrawSelf();
 	void SetVelocity(Vec3 in_velocity);

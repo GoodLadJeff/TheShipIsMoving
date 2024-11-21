@@ -1,5 +1,6 @@
 #include "raylib.h"
 #include "Game.h"
+#include "Actor.h"
 
 int main(void)
 {
@@ -10,9 +11,7 @@ int main(void)
 
 	SetTargetFPS(60);
     Game* game = new Game();
-    World::SetGame(game);
 
-    _ASSERT(World::game);
     std::cout << "World::game" << std::endl;
 
     game->Init();

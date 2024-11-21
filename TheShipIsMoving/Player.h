@@ -10,7 +10,7 @@ public:
 	Vec3 target = {};
 	Vec3 up = { 0, 1, 0 };
 
-	Player();
+	Player(Game* game);
 	void Update(float dt);
 	void Move(float dt);
 	void Look(float dt);

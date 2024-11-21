@@ -7,7 +7,6 @@ class PhysicsManager;
 class RenderManager;
 class Player;
 
-
 class Game
 {
 public:
@@ -32,17 +31,5 @@ private:
 	RenderManager* render_manager;
 	Player* player;
 	
-
 	float counter;
 };
-
-
-namespace World
-{
-	static Game* game;
-	static void SetGame(Game* in_game) { 
-		_ASSERT(in_game);
-		game = in_game; 
-		std::cout << "game = in_game" << std::endl;
-	}
-}

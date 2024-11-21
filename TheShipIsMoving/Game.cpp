@@ -19,13 +19,13 @@ void Game::Init()
 	std::cout << "Game::Init" << std::endl;
 	SetupScreen();
 
-	player = new Player();
+	player = new Player(this);
 	std::cout << "new Player()" << std::endl;
 	SetupCamera();
 
 	
 	
-	const Actor just_an_object = new Actor();
+	const Actor just_an_object = Actor(this);
 	std::cout << "just_an_object" << std::endl;
 }
 
@@ -59,7 +59,7 @@ void Game::Update(float dt)
 
 		float velocity_to_add = 20.0f;
 
-		const auto just_an_object = new Actor();
+		const auto just_an_object = new Actor(this);
 		just_an_object->position = { 0, 5, -10 };
 		just_an_object->SetVelocity({
 			(float)GetRandomValue(0, velocity_to_add) / 10.0f,
@@ -67,7 +67,7 @@ void Game::Update(float dt)
 			velocity_to_add });
 
 
-		const auto another_object = new Actor();
+		const auto another_object = new Actor(this);
 		another_object->position = { 0, 5, 10 };
 		another_object->SetVelocity({
 		   (float)GetRandomValue(0, velocity_to_add) / 10.0f,

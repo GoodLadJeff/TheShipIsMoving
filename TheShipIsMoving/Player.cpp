@@ -2,7 +2,7 @@
 #include "raymath.h"
 #include <iostream>
 
-Player::Player() : Actor(false)
+Player::Player(Game* game) : Actor(game, false)
 {
     position = { 0,2,0 };
 }
