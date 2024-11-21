@@ -2,9 +2,15 @@
 #include "raymath.h"
 #include <iostream>
 
-Player::Player() : Actor()
+Player::Player() : Actor(false)
 {
-    
+    position = { 0,2,0 };
+}
+
+
+void Player::Update(float dt)
+{
+    Move(dt);
 }
 
 void Player::Move(float dt)
@@ -34,3 +40,9 @@ void Player::Move(float dt)
     direction = direction.normalized();
     position += direction * walking_speed * dt;
 }
+
+void Player::Look(float dt)
+{
+    // to do
+}
+

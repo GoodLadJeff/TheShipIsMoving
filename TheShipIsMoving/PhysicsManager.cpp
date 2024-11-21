@@ -4,6 +4,7 @@
 
 PhysicsManager::PhysicsManager()
 {
+	std::cout << "PhysicsManager" << std::endl;
 	actors = std::vector<Actor*>();
 }
 

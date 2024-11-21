@@ -135,6 +135,8 @@
   <ItemGroup>
     <ClCompile Include="Actor.cpp" />
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="FloatingBall.cpp" />
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="MeshActor.cpp" />
     <ClCompile Include="PhysicsManager.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -142,6 +144,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor.h" />
+    <ClInclude Include="FloatingBall.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="ManagersRef.h" />
     <ClInclude Include="MeshActor.h" />
     <ClInclude Include="PhysicsManager.h" />
     <ClInclude Include="Player.h" />

@@ -1,15 +1,27 @@
 #include "Actor.h"
 #include "raymath.h"
 #include "rlgl.h"
+#include "Game.h"
+#include "PhysicsManager.h"
+#include "RenderManager.h"
 
-Actor::Actor()
+Actor::Actor(bool in_simulate_physics)
 {
 	position = { 0,0,0 };
-    velocity = { 0,0,0 };
+	velocity = { 0,0,0 };
 	acceleration = { 0,0,0 };
 	rotation = { 0,0,0 };
 
 	mass = 1;
+
+	simulate_physics = in_simulate_physics;
+	render = true;
+
+	_ASSERT(World::game);
+	_ASSERT(World::game->GetPhysicsManager() == nullptr);
+
+	 /*World::game->GetPhysicsManager()->AddActor(this);*/
+	//if (render) ManagersRef::game->GetRenderManager()->AddActor(this);
 }
 
 void Actor::DrawSelf()
