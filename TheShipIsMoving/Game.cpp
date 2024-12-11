@@ -5,6 +5,8 @@
 #include "Player.h"
 #include <iostream>
 
+Game* Game::ref = nullptr;
+
 Game::Game() :
 	physics_manager(new PhysicsManager()),
 	render_manager(new RenderManager()),
@@ -12,6 +14,8 @@ Game::Game() :
 {
 	main_camera = Camera3D();
 	std::cout << "Game" << std::endl;
+
+	Game::ref = this;
 }
 
 void Game::Init()

@@ -17,11 +17,14 @@ Actor::Actor(Game* game, bool in_simulate_physics)
 	simulate_physics = in_simulate_physics;
 	render = true;
 
-	_ASSERT(game);
+	_ASSERT(Game::GetRef());
 	_ASSERT(game->GetPhysicsManager());
-	
-	if (simulate_physics) game->GetPhysicsManager()->AddActor(this);
-	if (render) game->GetRenderManager()->AddActor(this);
+
+	if (simulate_physics)
+	{
+		Game::GetRef()->GetPhysicsManager()->AddActor(this);
+	}
+	if (render) Game::GetRef()->GetRenderManager()->AddActor(this);
 }
 
 void Actor::DrawSelf()

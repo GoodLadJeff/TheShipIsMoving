@@ -21,6 +21,9 @@ public:
 	void PhysicsUpdate(float dt);
 	void Update(float dt);
 	void Render();
+	static Game* ref;
+
+	static Game* GetRef() { return ref; }
 
 	PhysicsManager* GetPhysicsManager() { return physics_manager; }
 	RenderManager* GetRenderManager() { return render_manager; }
@@ -32,4 +35,5 @@ private:
 	Player* player;
 	
 	float counter;
+
 };
